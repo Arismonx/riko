@@ -6,7 +6,9 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/jwt": "^1.2.0",
     "@prisma/client": "~6.4.1",
+    "better-auth": "^1.2.3",
     "elysia": "~1.2.22"
   },
   "devDependencies": {
