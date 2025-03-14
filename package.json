@@ -1,19 +1,28 @@
 {
-  "name": "app",
-  "version": "1.0.50",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
-  },
-  "dependencies": {
-    "@elysiajs/jwt": "^1.2.0",
-    "@prisma/client": "~6.4.1",
-    "better-auth": "^1.2.3",
-    "elysia": "~1.2.22"
-  },
-  "devDependencies": {
-    "@types/bun": "~1.2.4",
-    "prisma": "~6.4.1"
-  },
-  "module": "src/index.js"
+    "name": "app",
+    "version": "1.0.50",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "bun run --watch src/index.ts",
+        "lint": "eslint src",
+        "format": "prettier --write src/**/*.ts"
+    },
+    "dependencies": {
+        "@elysiajs/jwt": "^1.2.0",
+        "@prisma/client": "~6.4.1",
+        "better-auth": "^1.2.3",
+        "elysia": "~1.2.22"
+    },
+    "devDependencies": {
+        "@eslint/js": "~9.22.0",
+        "@types/bun": "~1.2.4",
+        "eslint": "~9.22.0",
+        "eslint-config-prettier": "~10.1.1",
+        "eslint-plugin-prettier": "~5.2.3",
+        "eslint-plugin-simple-import-sort": "~12.1.1",
+        "prettier": "3.5.3",
+        "prisma": "~6.4.1",
+        "typescript-eslint": "~8.26.1"
+    },
+    "module": "src/index.ts"
 }
