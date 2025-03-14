@@ -1,5 +1,5 @@
 import { jwt } from '@elysiajs/jwt';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Elysia, t } from 'elysia';
 
 const prisma = new PrismaClient();
@@ -55,15 +55,21 @@ export const user = new Elysia({ prefix: '/user' })
     .post(
         '/register',
         async ({ body: { email, password }, store, error }) => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             if (store.user[email])
                 return error(400, {
                     success: false,
                     message: 'User already exists',
                 });
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             store.user[email] = await Bun.password.hash(password, {
                 algorithm: 'bcrypt',
                 cost: 4,
             });
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             console.log('hash password:', store.user[email]);
             return {
                 success: true,
