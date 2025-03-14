@@ -1,74 +1,98 @@
 import { Elysia, t } from 'elysia'
+import { PrismaClient, Prisma } from '@prisma/client'
 import { jwt } from '@elysiajs/jwt'
+
+const prisma = new PrismaClient()
+
 
 export const user = new Elysia({ prefix: '/user' })
     .use(
         jwt({
             name: 'jwt',
-            secret: 'Fischl von Luftschloss Narfidort'
+            secret: process.env.SECRET_KEY as string
         })
     )
-    .state({
-        user: {} as Record<string, string>,
-        session: {} as Record<number, string>
-    })
-    .post('/register', async ({ body: { email, password }, store, error }) => {
-        if (store.user[email])
+
+    .post('/register', async ({ body: { email, password }, error }) => {
+
+        const checkemail = await prisma.user.findUnique({
+            where: {
+                email: email,
+            },
+        })
+
+        if (checkemail)
             return error(400, {
                 success: false,
                 message: 'User already exists'
             })
-        store.user[email] = await Bun.password.hash(password, {
+
+        const hashPassword = await Bun.password.hash(password, {
             algorithm: 'bcrypt',
-            cost: 4
+            cost: 10
         })
-        console.log("hash password:", store.user[email])
-        return {
+
+        const users = await prisma.user.create({
+            data: {
+                email: email,
+                hashedPassword: hashPassword,
+            },
+        })
+
+        return error(201, {
             success: true,
-            message: 'User created Successful!'
-        }
+            message: 'User created Successful!',
+            data: users,
+        })
     }, {
         body: t.Object({
-            email: t.String(),
-            password: t.String()
+            email: t.String({ format: 'email' }),
+            password: t.String({ minLength: 8 })
         })
     })
 
     .post(
         '/login',
-        async ({
-            jwt,
-            store: { user },
-            error,
-            body: { email, password },
-            cookie:{ auth },
-        }) => {
-            const value = await jwt.sign(email)
-            auth.set({
-                value,
-                httpOnly: false,
-                maxAge: 7 * 86400,
-                path:'/'
-            })
+        async ({ jwt, error, body: { email, password }, cookie: { auth }, }) => {
 
-            if (
-                !user[email] ||
-                !(await Bun.password.verify(password, user[email]))
-            )
-                return error(400, {
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: email,
+                },
+            })
+            if (!user) {
+                return error(404, {
                     success: false,
-                    message: 'Invalid username or password'
+                    message: 'user not found'
                 })
 
-            return {
+            }
+
+            if (
+                !(await Bun.password.verify(password, user.hashedPassword))
+            )
+                return error(401, {
+                    success: false,
+                    message: 'Invalid email or password'
+                })
+
+            const token = await jwt.sign({ email })
+            auth.set({
+                value: token,
+                httpOnly: false,
+                maxAge: 7 * 86400,
+                path: '/'
+            })
+            return error(200, {
                 success: true,
                 message: `Signed in as ${email}`
-            }
+            })
+
         },
         {
             body: t.Object({
-                email: t.String(),
-                password: t.String()
+                email: t.String({ format: 'email' }),
+                password: t.String({ minLength: 8 })
             }),
         }
     )
