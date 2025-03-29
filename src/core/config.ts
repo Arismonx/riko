@@ -27,6 +27,9 @@ function parseEnv<T extends TSchema>(
 
 const envSchema = t.Object({
     // Application
+    PROJECT_NAME: t.String({
+        description: 'Project name',
+    }),
     NODE_ENV: t.Union(
         [t.Literal('development'), t.Literal('test'), t.Literal('production')],
         {
@@ -34,13 +37,23 @@ const envSchema = t.Object({
             description: 'Node environment',
         },
     ),
-    PROJECT_NAME: t.String({
-        description: 'Project name',
-    }),
     HOSTNAME: t.String({
         default: 'localhost',
         description: 'API hostname',
     }),
+
+    // Security
+    SECRET_KEY: t.String({
+        description: 'Secret key for JWT',
+    }),
+    ACCESS_TOKEN_EXPIRE: t.String({
+        default: '1d',
+        pattern: '^\\d+[smhdwMy]$',
+        description: 'Access token expiration time',
+    }),
+
+    // Ai
+    SYSTEM_PROMPT: t.String({}),
 });
 
 export type Environment = typeof envSchema.static;
