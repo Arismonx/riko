@@ -9,20 +9,20 @@
     },
     "dependencies": {
         "@elysiajs/jwt": "^1.2.0",
-        "@prisma/client": "~6.4.1",
-        "better-auth": "^1.2.3",
-        "elysia": "~1.2.22"
+        "@prisma/client": "~6.6.0",
+        "better-auth": "^1.2.7",
+        "elysia": "~1.2.25"
     },
     "devDependencies": {
-        "@eslint/js": "~9.22.0",
-        "@types/bun": "~1.2.4",
-        "eslint": "~9.22.0",
-        "eslint-config-prettier": "~10.1.1",
-        "eslint-plugin-prettier": "~5.2.3",
+        "@eslint/js": "~9.25.1",
+        "@types/bun": "~1.2.10",
+        "eslint": "~9.25.1",
+        "eslint-config-prettier": "~10.1.2",
+        "eslint-plugin-prettier": "~5.2.6",
         "eslint-plugin-simple-import-sort": "~12.1.1",
         "prettier": "3.5.3",
-        "prisma": "~6.4.1",
-        "typescript-eslint": "~8.26.1"
+        "prisma": "~6.6.0",
+        "typescript-eslint": "~8.31.0"
     },
     "module": "src/index.ts"
 }
