@@ -1,6 +1,7 @@
 import { jwt } from '@elysiajs/jwt';
-import { PrismaClient } from '@prisma/client';
 import { Elysia, t } from 'elysia';
+
+import { PrismaClient } from '@/generated/prisma/client';
 
 const prisma = new PrismaClient();
 

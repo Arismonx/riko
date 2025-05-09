@@ -1,5 +1,9 @@
 {
-    // Language specific settings
+    // General settings
+    "files.readonlyInclude": {
+        "**/prisma/migrations/**": true
+    },
+
     // Prettier
     "prettier.configPath": ".prettierrc",
 
