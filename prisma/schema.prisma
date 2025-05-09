@@ -23,11 +23,62 @@ model User {
     lastName       String? @map("last_name") @db.VarChar(255)
     hashedPassword String  @map("hashed_password") @db.VarChar(255)
     isActive       Boolean @default(false) @map("is_active")
-    // emailVerified  Boolean   @default(false) @map("email_verified")
-    //  createdAt      DateTime   @default(now()) @map("created_at")
-    // updatedAt      DateTime   @updatedAt @map("updated_at")
-    // deletedAt      DateTime?  @map("deleted_at")
+    emailVerified  Boolean @default(false) @map("email_verified")
+
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+    deletedAt DateTime? @map("deleted_at")
+
+    characters Character[]
+    chats      Chat[]
 
     @@index([email], name: "idx_users_email")
     @@map("users")
+}
+
+model Character {
+    id           String   @id @default(uuid(7)) @db.VarChar(36)
+    name         String   @db.VarChar(64)
+    description  String?  @db.VarChar(255)
+    instructions String   @map("instructions") @db.VarChar(255)
+    userId String @map("user_id") @db.VarChar(36)
+    createdAt    DateTime @default(now()) @map("created_at")
+    updatedAt    DateTime @updatedAt @map("updated_at")
+
+    // TODO: add profile or avatar
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Chat   Chat[]
+
+    @@map("charaters")
+}
+
+model Chat {
+    id          String   @id @default(uuid(7)) @db.VarChar(36)
+    title       String?  @db.VarChar(255)
+    userId      String   @map("user_id") @db.VarChar(36)
+    characterId String   @map("character_id") @db.VarChar(36)
+    createdAt   DateTime @default(now()) @map("created_at")
+    updatedAt   DateTime @updatedAt @map("updated_at")
+
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    character Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+    messages   Message[]
+
+    @@index([userId], name: "idx_chats_user_id")
+    @@index([characterId], name: "idx_chats_character_id")
+    @@map("chats")
+}
+
+model Message {
+    id        String   @id @default(uuid(7)) @db.VarChar(36)
+    role      String   @db.VarChar(32)
+    parts Json @db.Json
+    // attachments Json @db.Json
+    chatId String @map("chat_id") @db.VarChar(36)
+    createdAt DateTime @default(now()) @map("created_at")
+
+    chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+    @@map("messages")
 }
