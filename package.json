@@ -8,21 +8,21 @@
         "format": "prettier --write src/**/*.ts"
     },
     "dependencies": {
-        "@elysiajs/jwt": "^1.2.0",
-        "@prisma/client": "~6.6.0",
+        "@elysiajs/jwt": "^1.3.0",
+        "@prisma/client": "~6.7.0",
         "better-auth": "^1.2.7",
-        "elysia": "~1.2.25"
+        "elysia": "~1.3.1"
     },
     "devDependencies": {
-        "@eslint/js": "~9.25.1",
-        "@types/bun": "~1.2.10",
-        "eslint": "~9.25.1",
-        "eslint-config-prettier": "~10.1.2",
-        "eslint-plugin-prettier": "~5.2.6",
+        "@eslint/js": "~9.26.0",
+        "@types/bun": "~1.2.12",
+        "eslint": "~9.26.0",
+        "eslint-config-prettier": "~10.1.5",
+        "eslint-plugin-prettier": "~5.4.0",
         "eslint-plugin-simple-import-sort": "~12.1.1",
         "prettier": "3.5.3",
-        "prisma": "~6.6.0",
-        "typescript-eslint": "~8.31.0"
+        "prisma": "~6.7.0",
+        "typescript-eslint": "~8.32.0"
     },
     "peerDependencies": {
         "typescript": "~5.8.2"
