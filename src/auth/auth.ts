@@ -15,93 +15,74 @@ export const user = new Elysia({ prefix: '/user' })
 
     .post(
         '/register',
-        async ({ body: { email, password }, error }) => {
+        async ({ body: { email, password }, status }) => {
             const checkemail = await prisma.user.findUnique({
                 where: {
                     email: email,
                 },
             });
 
-            if (checkemail)
-                return error(400, {
+            if (checkemail) {
+                return status(409, {
                     success: false,
                     message: 'User already exists',
                 });
+            } else {
+                const hashPassword = await Bun.password.hash(password, {
+                    algorithm: 'bcrypt',
+                    cost: 10,
+                });
 
-            const hashPassword = await Bun.password.hash(password, {
-                algorithm: 'bcrypt',
-                cost: 10,
-            });
+                const users = await prisma.user.create({
+                    data: {
+                        email: email,
+                        hashedPassword: hashPassword,
+                    },
+                });
 
-            const users = await prisma.user.create({
-                data: {
-                    email: email,
-                    hashedPassword: hashPassword,
-                },
-            });
-
-            return error(201, {
-                success: true,
-                message: 'User created Successful!',
-                data: users,
-            });
+                return status(201, {
+                    success: true,
+                    message: 'User created Successful!',
+                    date: users,
+                });
+            }
         },
         {
             body: t.Object({
                 email: t.String({ format: 'email' }),
-                password: t.String({ minLength: 8 }),
+                password: t.String({
+                    minLength: 8,
+                    description: 'User password (at least 8 characters)',
+                }),
             }),
+            detail: {
+                summary: 'register the user',
+                tags: ['authentication'],
+            },
         },
     )
-    .post(
-        '/register',
-        async ({ body: { email, password }, store, error }) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            if (store.user[email])
-                return error(400, {
-                    success: false,
-                    message: 'User already exists',
-                });
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            store.user[email] = await Bun.password.hash(password, {
-                algorithm: 'bcrypt',
-                cost: 4,
-            });
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            console.log('hash password:', store.user[email]);
-            return {
-                success: true,
-                message: 'User created Successful!',
-            };
-        },
-        {
-            body: t.Object({
-                email: t.String(),
-                password: t.String(),
-            }),
-        },
-    )
-
     .post(
         '/login',
-        async ({ jwt, error, body: { email, password }, cookie: { auth } }) => {
+        async ({
+            jwt,
+            body: { email, password },
+            status,
+            cookie: { auth },
+        }) => {
             const user = await prisma.user.findUnique({
                 where: {
                     email: email,
                 },
             });
             if (!user) {
-                return error(404, {
+                return status(404, {
                     success: false,
                     message: 'user not found',
                 });
             }
 
             if (!(await Bun.password.verify(password, user.hashedPassword)))
-                return error(401, {
+                return status(401, {
                     success: false,
                     message: 'Invalid email or password',
                 });
@@ -113,7 +94,7 @@ export const user = new Elysia({ prefix: '/user' })
                 maxAge: 7 * 86400,
                 path: '/',
             });
-            return error(200, {
+            return status(200, {
                 success: true,
                 message: `Signed in as ${email}`,
             });
@@ -121,7 +102,11 @@ export const user = new Elysia({ prefix: '/user' })
         {
             body: t.Object({
                 email: t.String({ format: 'email' }),
-                password: t.String({ minLength: 8 }),
+                password: t.String(),
             }),
+            detail: {
+                summary: 'login the user',
+                tags: ['authentication'],
+            },
         },
     );
