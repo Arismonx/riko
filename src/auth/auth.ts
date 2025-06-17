@@ -2,6 +2,7 @@ import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from 'elysia';
 
 import { PrismaClient } from '@/generated/prisma';
+import { date } from 'better-auth';
 
 const prisma = new PrismaClient();
 
@@ -67,11 +68,14 @@ export const user = new Elysia({ prefix: '/user' })
             jwt,
             body: { email, password },
             status,
-            cookie: { auth },
+            cookie: { accessToken, refreshToken },
         }) => {
             const user = await prisma.user.findUnique({
-                where: {
-                    email: email,
+                where: { email: email },
+                select: {
+                    id: true,
+                    email: true,
+                    hashedPassword: true,
                 },
             });
             if (!user) {
@@ -87,16 +91,30 @@ export const user = new Elysia({ prefix: '/user' })
                     message: 'Invalid email or password',
                 });
 
-            const token = await jwt.sign({ email });
-            auth.set({
-                value: token,
+            const accessJWTToken = await jwt.sign({ email });
+            accessToken.set({
+                value: accessJWTToken,
                 httpOnly: false,
-                maxAge: 7 * 86400,
+                maxAge: 1 * 86400,
                 path: '/',
             });
+
+            const refreshJWTToken = await jwt.sign({ email });
+            accessToken.set({
+                value: refreshJWTToken,
+                httpOnly: false,
+                maxAge: 3 * 86400,
+                path: '/',
+            });
+
             return status(200, {
                 success: true,
                 message: `Signed in as ${email}`,
+                data: {
+                    user,
+                    accessJWTToken,
+                    refreshJWTToken,
+                },
             });
         },
         {
