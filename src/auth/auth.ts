@@ -100,7 +100,7 @@ export const user = new Elysia({ prefix: '/user' })
             });
 
             const refreshJWTToken = await jwt.sign({ email });
-            accessToken.set({
+            refreshToken.set({
                 value: refreshJWTToken,
                 httpOnly: false,
                 maxAge: 3 * 86400,
