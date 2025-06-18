@@ -1,5 +1,6 @@
 import { jwt } from '@elysiajs/jwt';
 import { t } from 'elysia';
+import * as jose from 'jose';
 
 import { env } from '@/core/config';
 
@@ -29,3 +30,21 @@ export async function getPasswordHash(password: string) {
         cost: 10,
     });
 }
+
+export const createAccessToken = async (subject: string, exp: string) => {
+    const payload = { sub: subject, type: 'access' };
+    const encodedJwt = await new jose.SignJWT(payload)
+        .setProtectedHeader({ alg: ALGORITHM, typ: 'JWT' })
+        .setExpirationTime(exp)
+        .sign(new TextEncoder().encode(env.SECRET_KEY));
+    return encodedJwt;
+};
+
+export const createRefreshToken = async (subject: string, exp: string) => {
+    const payload = { sub: subject, type: 'refresh' };
+    const encodedJwt = await new jose.SignJWT(payload)
+        .setProtectedHeader({ alg: ALGORITHM, typ: 'JWT' })
+        .setExpirationTime(exp)
+        .sign(new TextEncoder().encode(env.SECRET_KEY));
+    return encodedJwt;
+};

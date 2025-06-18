@@ -2,7 +2,7 @@ import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from 'elysia';
 
 import { PrismaClient } from '@/generated/prisma';
-import { date } from 'better-auth';
+import { createAccessToken, createRefreshToken } from '@/core/security';
 
 const prisma = new PrismaClient();
 
@@ -91,7 +91,7 @@ export const user = new Elysia({ prefix: '/user' })
                     message: 'Invalid email or password',
                 });
 
-            const accessJWTToken = await jwt.sign({ email });
+            const accessJWTToken = await createAccessToken(email, '1d');
             accessToken.set({
                 value: accessJWTToken,
                 httpOnly: false,
@@ -99,7 +99,7 @@ export const user = new Elysia({ prefix: '/user' })
                 path: '/',
             });
 
-            const refreshJWTToken = await jwt.sign({ email });
+            const refreshJWTToken = await createRefreshToken(email, '3d');
             refreshToken.set({
                 value: refreshJWTToken,
                 httpOnly: false,
@@ -127,4 +127,12 @@ export const user = new Elysia({ prefix: '/user' })
                 tags: ['authentication'],
             },
         },
-    );
+    )
+    .post('/logout', async ({ cookie: { accessToken, refreshToken } }) => {
+        accessToken.remove();
+        refreshToken.remove();
+
+        return {
+            message: 'Logout successfully',
+        };
+    });
