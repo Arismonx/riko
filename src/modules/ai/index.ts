@@ -3,7 +3,7 @@ import type { AgentInputItem } from '@openai/agents';
 import { Elysia, t } from 'elysia';
 import { background } from 'elysia-background';
 
-import { prisma, type PrismaTransaction } from '@/core/db';
+import { prisma } from '@/core/db';
 import { auth } from '@/plugins/auth';
 
 import { AI } from './service';
@@ -13,7 +13,7 @@ export const ai = new Elysia({ prefix: '/ai' }) //
     .use(background())
     .post(
         '/chat',
-        async ({ body, currentUser, status, backgroundTasks }) => {
+        async ({ body, currentUser, status }) => {
             const { conversationId, message, decisions } = body;
 
             try {
@@ -88,25 +88,25 @@ export const ai = new Elysia({ prefix: '/ai' }) //
                         decisions,
                     });
 
-                    // for (const msg of response.history) {
-                    //     const content = JSON.stringify(msg);
+                    for (const msg of response.history) {
+                        const content = JSON.stringify(msg);
 
-                    //     const existingMessage = await tx.message.findFirst({
-                    //         where: {
-                    //             chatId,
-                    //             content,
-                    //         },
-                    //     });
+                        const existingMessage = await tx.message.findFirst({
+                            where: {
+                                chatId,
+                                content,
+                            },
+                        });
 
-                    //     if (!existingMessage) {
-                    //         await tx.message.create({
-                    //             data: {
-                    //                 chatId,
-                    //                 content,
-                    //             },
-                    //         });
-                    //     }
-                    // }
+                        if (!existingMessage) {
+                            await tx.message.create({
+                                data: {
+                                    chatId,
+                                    content,
+                                },
+                            });
+                        }
+                    }
 
                     // backgroundTasks.addTask(async () => {});
 
