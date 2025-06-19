@@ -9,7 +9,7 @@ import { env } from '@/core/config';
 export const app = new Elysia({ name: 'ai-chat-bot' }) //
     .use((app) => {
         const ALL_CORS_ORIGINS: string[] = [
-            ...env.CORS_ORIGINS,
+            ...env.BACKEND_CORS_ORIGINS,
             env.FRONTEND_HOST,
         ];
         app.use(

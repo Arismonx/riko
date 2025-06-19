@@ -45,7 +45,7 @@ const envSchema = t.Object({
         description: 'Frontend host',
         default: 'http://localhost:3000',
     }),
-    CORS_ORIGINS: t
+    BACKEND_CORS_ORIGINS: t
         .Transform(
             t.String({
                 description:
