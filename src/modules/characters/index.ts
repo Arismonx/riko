@@ -22,7 +22,7 @@ export const characters = new Elysia({
                     skip: offset,
                     take: limit,
                 }),
-                prisma.user.count(),
+                prisma.character.count(),
             ]);
             return {
                 data: characters,
@@ -42,15 +42,15 @@ export const characters = new Elysia({
     )
     .get(
         '/:id',
-        ({ params: { id } }) => {
-            const character = prisma.character.findUnique({
+        async ({ params: { id } }) => {
+            const character = await prisma.character.findUnique({
                 where: { id },
             });
 
             if (!character) {
                 throw new HTTPError({
                     status: 404,
-                    message: 'Conversation not found',
+                    message: 'Character not found',
                 });
             }
 
