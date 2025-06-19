@@ -1,19 +1,10 @@
 import { Elysia } from 'elysia';
 
-import { prisma } from '@/core/db';
+import { apiRouter } from '@/api';
+import { auth } from '@/auth/auth';
 
-import { user } from './auth/auth';
+export const app = new Elysia({ name: 'ai-chat-bot' }) //
+    .use(auth)
+    .use(apiRouter({ prefix: '/api/v1' }));
 
-export const app = new Elysia({ name: 'chat-bot' });
-
-app.get('/', () => 'Hello World').use(user);
-
-app.get('/test', () => {
-    const users = prisma.user.findMany({
-        skip: 0, // offset
-        take: 10, // limit
-    });
-    return users;
-});
-
-export type App = typeof app;
+// export type app = typeof app;
