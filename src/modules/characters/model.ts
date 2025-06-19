@@ -1,4 +1,4 @@
-import { t } from 'elysia';
+import { t, type TSchema } from 'elysia';
 
 export const Character = t.Object({
     id: t.String({ format: 'uuid' }),
@@ -7,7 +7,26 @@ export const Character = t.Object({
     updatedAt: t.Date(),
 });
 
-export const Characters = t.Object({});
+export type Character = typeof Character.static;
+
+export const Pagination = <T extends TSchema>(schema: T) =>
+    t.Object({
+        data: t.Array(schema),
+        pagination: t.Object({
+            total: t.Number(),
+            limit: t.Number(),
+            offset: t.Number(),
+        }),
+    });
+
+export const OffsetBasedPagination = t.Object({
+    limit: t.Number({ minimum: 1, default: 100 }),
+    offset: t.Number({ minimum: 0, default: 0 }),
+});
+
+export const Characters = Pagination(Character);
+
+export type Characters = typeof Characters.static;
 
 export const CreateCharacter = t.Object({
     name: t.String(),
@@ -15,4 +34,8 @@ export const CreateCharacter = t.Object({
     instructions: t.String(),
 });
 
+export type CreateCharacter = typeof CreateCharacter.static;
+
 export const UpdateCharacter = t.Partial(CreateCharacter);
+
+export type UpdateCharacter = typeof UpdateCharacter.static;

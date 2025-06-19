@@ -4,7 +4,12 @@ import { prisma } from '@/core/db';
 import { HTTPError } from '@/errors';
 import { auth } from '@/plugins/auth';
 
-import { Character, CreateCharacter } from './model';
+import {
+    Character,
+    Characters,
+    CreateCharacter,
+    UpdateCharacter,
+} from './model';
 
 // const CHARACTER_LIMIT = 5;
 // const CHARACTER_LIMIT_PRO = 30;
@@ -31,13 +36,16 @@ export const characters = new Elysia({
                     offset: offset,
                     total: count,
                 },
-            };
+            } satisfies Characters;
         },
         {
             query: t.Object({
                 limit: t.Number({ minimum: 1, default: 100 }),
                 offset: t.Number({ minimum: 0, default: 0 }),
             }),
+            response: {
+                200: Characters,
+            },
         },
     )
     .get(
@@ -54,12 +62,15 @@ export const characters = new Elysia({
                 });
             }
 
-            return character;
+            return character satisfies Character;
         },
         {
             params: t.Object({
                 id: t.String({ format: 'uuid' }),
             }),
+            response: {
+                200: Character,
+            },
         },
     )
     .post(
@@ -117,9 +128,26 @@ export const characters = new Elysia({
             response: Character,
         },
     )
-    .patch('/:id', () => {
-        // TODO: implement update character logic
-    })
-    .delete('/:id', () => {
-        // TODO: implement delete character logic
-    });
+    .patch(
+        '/:id',
+        () => {
+            // TODO: implement update character logic
+        },
+        {
+            params: t.Object({
+                id: t.String({ format: 'uuid' }),
+            }),
+            body: UpdateCharacter,
+        },
+    )
+    .delete(
+        '/:id',
+        () => {
+            // TODO: implement delete character logic
+        },
+        {
+            params: t.Object({
+                id: t.String({ format: 'uuid' }),
+            }),
+        },
+    );
