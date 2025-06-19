@@ -15,4 +15,4 @@ export const CreateCharacter = t.Object({
     instructions: t.String(),
 });
 
-export const UpdateCharacter = t.Object({});
+export const UpdateCharacter = t.Partial(CreateCharacter);
