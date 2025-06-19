@@ -50,6 +50,7 @@ export abstract class AI {
                 if (decisions && data.conversationId) {
                     // If we receive a new request with decisions, we will look up the current state in the database
                     // const stateString = await db().get(data.conversationId);
+                    // TODO: Implement database retrieval logic to fetch the conversation state using data.conversationId.
                     const stateString = undefined;
 
                     if (!stateString) {
