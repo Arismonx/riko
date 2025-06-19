@@ -1,11 +1,10 @@
 import { app } from '@/app';
+import { env } from '@/core/config';
 
-app.listen(
-    {
-        port: 8000,
-    },
-    ({ hostname, port }) => {
-        const url = `${process.env.NODE_ENV !== 'production' ? 'http://' : 'https://'}${hostname}:${port}`;
-        console.log(`🦊 Elysia is running at ${url}`);
-    },
-);
+app.listen({ port: 8000 }, ({ hostname, port }) => {
+    const url = `${process.env.NODE_ENV !== 'production' ? 'http://' : 'https://'}${hostname}:${port}`;
+    console.log(`🦊 Elysia is running at ${url}`);
+    if (env.NODE_ENV === 'development') {
+        console.log(`🦊 API docs: ${url}/api/docs`);
+    }
+});
