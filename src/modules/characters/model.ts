@@ -2,7 +2,7 @@ import { t } from 'elysia';
 
 export const Character = t.Object({
     id: t.String({ format: 'uuid' }),
-    title: t.String(),
+    name: t.String(),
     createdAt: t.Date(),
     updatedAt: t.Date(),
 });
