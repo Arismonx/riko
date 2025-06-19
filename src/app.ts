@@ -12,7 +12,7 @@ export const app = new Elysia({ name: env.APP_NAME }) //
             origin: [...env.BACKEND_CORS_ORIGINS, env.FRONTEND_HOST],
             methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             credentials: true,
-            allowedHeaders: true,
+            allowedHeaders: ['Content-Type', 'Authorization'],
         }),
     )
     .use((app) => {
