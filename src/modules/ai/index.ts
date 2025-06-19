@@ -62,6 +62,7 @@ export const ai = new Elysia({ prefix: '/ai' }) //
                     const messages: AgentInputItem[] = [];
 
                     for (const msg of chat.messages) {
+                        // TODO: add error handling for JSON parsing
                         const content = JSON.parse(msg.content);
                         messages.push(content);
                     }
