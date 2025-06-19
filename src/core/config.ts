@@ -50,7 +50,7 @@ const envSchema = t.Object({
             t.String({
                 description:
                     'Comma-separated list of origins for the CORS policy',
-                default: '', // idk how to set a default value for transform
+                default: '', // Default value is set to an empty string as setting a default for Transform is currently unclear.
             }),
         )
         .Decode((value) =>
