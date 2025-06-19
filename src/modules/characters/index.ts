@@ -117,5 +117,9 @@ export const characters = new Elysia({
             response: Character,
         },
     )
-    .put('/:id', () => {})
-    .delete('/:id', () => {});
+    .patch('/:id', () => {
+        // TODO: implement update character logic
+    })
+    .delete('/:id', () => {
+        // TODO: implement delete character logic
+    });
