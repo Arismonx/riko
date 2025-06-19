@@ -2,6 +2,8 @@ import type { StaticDecode } from '@sinclair/typebox';
 import { TransformDecodeCheckError, Value } from '@sinclair/typebox/value';
 import { t, type TSchema } from 'elysia';
 
+import packageInfo from './../../package.json';
+
 // A Simple Environment Variable Parser
 
 function parseEnv<T extends TSchema>(
@@ -29,6 +31,10 @@ const envSchema = t.Object({
     // Application
     PROJECT_NAME: t.String({
         description: 'Project name',
+    }),
+    PROJECT_VERSION: t.String({
+        description: 'Project version',
+        default: packageInfo.version || '0.0.1',
     }),
     NODE_ENV: t.Union(
         [t.Literal('development'), t.Literal('test'), t.Literal('production')],

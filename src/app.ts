@@ -28,7 +28,10 @@ export const app = new Elysia({ name: 'ai-chat-bot' }) //
                 swagger({
                     path: '/api/docs',
                     documentation: {
-                        info: { title: env.PROJECT_NAME, version: '0.0.1' },
+                        info: {
+                            title: env.PROJECT_NAME,
+                            version: env.PROJECT_VERSION,
+                        },
                     },
                 }),
             );
