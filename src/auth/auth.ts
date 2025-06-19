@@ -65,7 +65,6 @@ export const user = new Elysia({ prefix: '/user' })
     .post(
         '/login',
         async ({
-            jwt,
             body: { email, password },
             status,
             cookie: { accessToken, refreshToken },
@@ -91,7 +90,7 @@ export const user = new Elysia({ prefix: '/user' })
                     message: 'Invalid email or password',
                 });
 
-            const accessJWTToken = await createAccessToken(email, '1d');
+            const accessJWTToken = await createAccessToken(user.id, '1d');
             accessToken.set({
                 value: accessJWTToken,
                 httpOnly: false,
@@ -99,7 +98,7 @@ export const user = new Elysia({ prefix: '/user' })
                 path: '/',
             });
 
-            const refreshJWTToken = await createRefreshToken(email, '3d');
+            const refreshJWTToken = await createRefreshToken(user.id, '3d');
             refreshToken.set({
                 value: refreshJWTToken,
                 httpOnly: false,
@@ -107,11 +106,17 @@ export const user = new Elysia({ prefix: '/user' })
                 path: '/',
             });
 
+            const updateRefreshToken = await prisma.user.update({
+                where: { id: user.id },
+                data: { refreshJWTToken: refreshJWTToken },
+            });
+
             return status(200, {
                 success: true,
                 message: `Signed in as ${email}`,
                 data: {
-                    user,
+                    user: updateRefreshToken,
+                    id: user.id,
                     accessJWTToken,
                     refreshJWTToken,
                 },
@@ -128,11 +133,20 @@ export const user = new Elysia({ prefix: '/user' })
             },
         },
     )
-    .post('/logout', async ({ cookie: { accessToken, refreshToken } }) => {
-        accessToken.remove();
-        refreshToken.remove();
+    .post(
+        '/logout',
+        async ({ cookie: { accessToken, refreshToken } }) => {
+            accessToken.remove();
+            refreshToken.remove();
 
-        return {
-            message: 'Logout successfully',
-        };
-    });
+            return {
+                message: 'Logout successfully',
+            };
+        },
+        {
+            detail: {
+                summary: 'logout the user',
+                tags: ['authentication'],
+            },
+        },
+    );
