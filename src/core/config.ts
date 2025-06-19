@@ -2,7 +2,7 @@ import type { StaticDecode } from '@sinclair/typebox';
 import { TransformDecodeCheckError, Value } from '@sinclair/typebox/value';
 import { t, type TSchema } from 'elysia';
 
-import packageInfo from './../../package.json';
+import packageInfo from '../../package.json';
 
 // A Simple Environment Variable Parser
 
