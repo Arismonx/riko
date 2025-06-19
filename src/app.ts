@@ -16,7 +16,7 @@ export const app = new Elysia({ name: env.APP_NAME }) //
         }),
     )
     .use((app) => {
-        if (env.NODE_ENV !== 'production')
+        if (env.NODE_ENV === 'development')
             return app.use(
                 swagger({
                     path: '/api/docs',
