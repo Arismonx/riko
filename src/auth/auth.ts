@@ -2,7 +2,7 @@ import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from 'elysia';
 
 import { PrismaClient } from '@/generated/prisma';
-import { createAccessToken, createRefreshToken } from '@/core/security';
+import { createToken } from '@/core/security';
 
 const prisma = new PrismaClient();
 
@@ -44,7 +44,7 @@ export const user = new Elysia({ prefix: '/user' })
                 return status(201, {
                     success: true,
                     message: 'User created Successful!',
-                    date: users,
+                    data: users,
                 });
             }
         },
@@ -90,7 +90,7 @@ export const user = new Elysia({ prefix: '/user' })
                     message: 'Invalid email or password',
                 });
 
-            const accessJWTToken = await createAccessToken(user.id, '1d');
+            const accessJWTToken = await createToken(user.id, 'access', '1d');
             accessToken.set({
                 value: accessJWTToken,
                 httpOnly: false,
@@ -98,7 +98,7 @@ export const user = new Elysia({ prefix: '/user' })
                 path: '/',
             });
 
-            const refreshJWTToken = await createRefreshToken(user.id, '3d');
+            const refreshJWTToken = await createToken(user.id, 'refresh', '3d');
             refreshToken.set({
                 value: refreshJWTToken,
                 httpOnly: false,

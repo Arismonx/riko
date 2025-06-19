@@ -31,17 +31,12 @@ export async function getPasswordHash(password: string) {
     });
 }
 
-export const createAccessToken = async (subject: string, exp: string) => {
-    const payload = { sub: subject, type: 'access' };
-    const encodedJwt = await new jose.SignJWT(payload)
-        .setProtectedHeader({ alg: ALGORITHM, typ: 'JWT' })
-        .setExpirationTime(exp)
-        .sign(new TextEncoder().encode(env.SECRET_KEY));
-    return encodedJwt;
-};
-
-export const createRefreshToken = async (subject: string, exp: string) => {
-    const payload = { sub: subject, type: 'refresh' };
+export const createToken = async (
+    subject: string,
+    type: string,
+    exp: string,
+) => {
+    const payload = { sub: subject, type };
     const encodedJwt = await new jose.SignJWT(payload)
         .setProtectedHeader({ alg: ALGORITHM, typ: 'JWT' })
         .setExpirationTime(exp)

@@ -25,7 +25,7 @@ model User {
     hashedPassword  String    @map("hashed_password") @db.VarChar(255)
     isActive        Boolean   @default(false) @map("is_active")
     emailVerified   Boolean   @default(false) @map("email_verified")
-    refreshJWTToken String?   @map("backlist_refresh_jwt_token")
+    refreshJWTToken String?   @map("blacklist_refresh_jwt_token")
     createdAt       DateTime  @default(now()) @map("created_at")
     updatedAt       DateTime  @updatedAt @map("updated_at")
     deletedAt       DateTime? @map("deleted_at")
