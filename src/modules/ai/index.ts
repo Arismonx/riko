@@ -63,8 +63,20 @@ export const ai = new Elysia({ prefix: '/ai' }) //
 
                     for (const msg of chat.messages) {
                         // TODO: add error handling for JSON parsing
-                        const content = JSON.parse(msg.content);
-                        messages.push(content);
+                        // const content = JSON.parse(msg.content);
+                        // messages.push(content);
+
+                        let content;
+                        try {
+                            content = JSON.parse(msg.content);
+                            messages.push(content);
+                        } catch (error) {
+                            console.error(
+                                'Failed to parse message content:',
+                                error,
+                            );
+                            throw status(400, 'Malformed message content');
+                        }
                     }
 
                     if (message) {
