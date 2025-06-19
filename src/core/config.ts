@@ -41,6 +41,25 @@ const envSchema = t.Object({
         default: 'localhost',
         description: 'API hostname',
     }),
+    FRONTEND_HOST: t.String({
+        description: 'Frontend host',
+        default: 'http://localhost:3000',
+    }),
+    CORS_ORIGINS: t
+        .Transform(
+            t.String({
+                description:
+                    'Comma-separated list of origins for the CORS policy',
+                default: '', // idk how to set a default value for transform
+            }),
+        )
+        .Decode((value) =>
+            value
+                .split(',')
+                .map((v) => v.trim().replace(/\/$/, ''))
+                .filter((v) => v),
+        )
+        .Encode((value) => value.join(',')),
 
     // Security
     SECRET_KEY: t.String({
@@ -51,9 +70,6 @@ const envSchema = t.Object({
         pattern: '^\\d+[smhdwMy]$',
         description: 'Access token expiration time',
     }),
-
-    // Ai
-    SYSTEM_PROMPT: t.String({}),
 });
 
 export type Environment = typeof envSchema.static;
