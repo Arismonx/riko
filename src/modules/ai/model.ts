@@ -10,7 +10,7 @@ export const signInResponse = t.Object({
     username: t.String(),
     token: t.String(),
 });
-export type signInResponse = typeof signInBody.static;
+export type signInResponse = typeof signInResponse.static;
 
 export const signInInvalid = t.Literal('Invalid username or password');
 export type signInInvalid = typeof signInInvalid.static;
