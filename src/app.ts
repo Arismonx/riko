@@ -6,7 +6,7 @@ import { apiRouter } from '@/api';
 import { auth } from '@/auth/auth';
 import { env } from '@/core/config';
 
-export const app = new Elysia({ name: 'ai-chat-bot' }) //
+export const app = new Elysia({ name: env.PROJECT_NAME }) //
     .use(
         cors({
             origin: [...env.BACKEND_CORS_ORIGINS, env.FRONTEND_HOST],
