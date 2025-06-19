@@ -6,7 +6,7 @@ import { apiRouter } from '@/api';
 import { auth } from '@/auth/auth';
 import { env } from '@/core/config';
 
-export const app = new Elysia({ name: env.PROJECT_NAME }) //
+export const app = new Elysia({ name: env.APP_NAME }) //
     .use(
         cors({
             origin: [...env.BACKEND_CORS_ORIGINS, env.FRONTEND_HOST],
@@ -22,8 +22,8 @@ export const app = new Elysia({ name: env.PROJECT_NAME }) //
                     path: '/api/docs',
                     documentation: {
                         info: {
-                            title: env.PROJECT_NAME,
-                            version: env.PROJECT_VERSION,
+                            title: env.APP_NAME,
+                            version: env.APP_VERSION,
                         },
                     },
                 }),

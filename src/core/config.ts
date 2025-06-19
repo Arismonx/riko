@@ -29,11 +29,11 @@ function parseEnv<T extends TSchema>(
 
 const envSchema = t.Object({
     // Application
-    PROJECT_NAME: t.String({
-        description: 'Project name',
+    APP_NAME: t.String({
+        description: 'App name',
     }),
-    PROJECT_VERSION: t.String({
-        description: 'Project version',
+    APP_VERSION: t.String({
+        description: 'App version',
         default: packageInfo.version || '0.0.1',
     }),
     NODE_ENV: t.Union(
