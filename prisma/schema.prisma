@@ -18,20 +18,20 @@ datasource db {
 }
 
 model User {
-    id              String    @id @default(uuid(7)) @db.VarChar(36)
-    email           String    @unique @db.VarChar(320)
-    firstName       String?   @map("first_name") @db.VarChar(255)
-    lastName        String?   @map("last_name") @db.VarChar(255)
-    hashedPassword  String    @map("hashed_password") @db.VarChar(255)
-    isActive        Boolean   @default(false) @map("is_active")
-    emailVerified   Boolean   @default(false) @map("email_verified")
-    refreshJWTToken String?   @map("blacklist_refresh_jwt_token")
-    createdAt       DateTime  @default(now()) @map("created_at")
-    updatedAt       DateTime  @updatedAt @map("updated_at")
-    deletedAt       DateTime? @map("deleted_at")
+    id             String    @id @default(uuid(7)) @db.VarChar(36)
+    email          String    @unique @db.VarChar(320)
+    firstName      String?   @map("first_name") @db.VarChar(255)
+    lastName       String?   @map("last_name") @db.VarChar(255)
+    hashedPassword String    @map("hashed_password") @db.VarChar(255)
+    isActive       Boolean   @default(false) @map("is_active")
+    emailVerified  Boolean   @default(false) @map("email_verified")
+    createdAt      DateTime  @default(now()) @map("created_at")
+    updatedAt      DateTime  @updatedAt @map("updated_at")
+    deletedAt      DateTime? @map("deleted_at")
 
-    characters Character[]
-    chats      Chat[]
+    characters   Character[]
+    chats        Chat[]
+    RefreshToken RefreshToken[]
 
     @@index([email], name: "idx_users_email")
     @@map("users")
@@ -82,4 +82,16 @@ model Message {
     chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
     @@map("messages")
+}
+
+model RefreshToken {
+    id        String   @id @default(uuid())
+    token     String   @unique
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String   @db.VarChar(36)
+    createdAt DateTime @default(now())
+    expiresAt DateTime
+
+    @@index([userId], name: "idx_refresh_token_user_id")
+    @@map("refresh_tokens")
 }
