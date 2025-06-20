@@ -3,6 +3,7 @@ import { Elysia, t } from 'elysia';
 
 import { PrismaClient } from '@/generated/prisma';
 import { createToken } from '@/core/security';
+import { date } from 'better-auth';
 
 const prisma = new PrismaClient();
 
@@ -106,16 +107,20 @@ export const user = new Elysia({ prefix: '/user' })
                 path: '/',
             });
 
-            const updateRefreshToken = await prisma.user.update({
-                where: { id: user.id },
-                data: { refreshJWTToken: refreshJWTToken },
+            await prisma.refreshToken.create({
+                data: {
+                    token: refreshJWTToken,
+                    userId: user.id,
+                    expiresAt: new Date(
+                        Date.now() + 3 * 86400 * 1000, // 3 days
+                    ),
+                },
             });
 
             return status(200, {
                 success: true,
                 message: `Signed in as ${email}`,
                 data: {
-                    user: updateRefreshToken,
                     id: user.id,
                     accessJWTToken,
                     refreshJWTToken,
@@ -136,11 +141,23 @@ export const user = new Elysia({ prefix: '/user' })
     .post(
         '/logout',
         async ({ cookie: { accessToken, refreshToken } }) => {
+            if (!accessToken || !accessToken.value) {
+                return {
+                    message: 'You are not logged in',
+                    success: false,
+                };
+            }
             accessToken.remove();
-            refreshToken.remove();
+            if (refreshToken && refreshToken.value) {
+                await prisma.refreshToken.deleteMany({
+                    where: { token: refreshToken.value },
+                });
+            }
 
+            refreshToken.remove();
             return {
                 message: 'Logout successfully',
+                success: true,
             };
         },
         {
