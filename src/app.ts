@@ -3,7 +3,7 @@ import { swagger } from '@elysiajs/swagger';
 import { Elysia } from 'elysia';
 
 import { apiRouter } from '@/api';
-import { auth } from '@/auth/auth';
+import { auth } from '@/modules/auth';
 import { env } from '@/core/config';
 
 export const app = new Elysia({ name: env.APP_NAME }) //

@@ -6,7 +6,7 @@ import { createToken } from '@/core/security';
 
 const prisma = new PrismaClient();
 
-export const user = new Elysia({ prefix: '/user' })
+export const auth = new Elysia({ prefix: '/auth' })
     .use(
         jwt({
             name: 'jwt',
