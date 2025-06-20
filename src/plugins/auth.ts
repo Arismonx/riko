@@ -37,4 +37,4 @@ export const auth = new Elysia({ name: 'auth' })
 
         return { currentUser: user };
     })
-    .as('plugin');
+    .as('scoped');

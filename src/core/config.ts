@@ -76,6 +76,13 @@ const envSchema = t.Object({
         pattern: '^\\d+[smhdwMy]$',
         description: 'Access token expiration time',
     }),
+
+    // Ai
+    SYSTEM_PROMPT: t.String({}),
+
+    DATABASE_URL: t.String({
+        description: 'Database connection string',
+    }),
 });
 
 export type Environment = typeof envSchema.static;

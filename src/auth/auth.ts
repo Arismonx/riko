@@ -1,9 +1,8 @@
 import { jwt } from '@elysiajs/jwt';
 import { Elysia, t } from 'elysia';
 
-import { PrismaClient } from '@/generated/prisma';
+import { PrismaClient } from '@/generated/prisma/client';
 import { createToken } from '@/core/security';
-import { date } from 'better-auth';
 
 const prisma = new PrismaClient();
 
@@ -91,6 +90,7 @@ export const user = new Elysia({ prefix: '/user' })
                     message: 'Invalid email or password',
                 });
 
+            // TODO i want use httpOnly: false, for development
             const accessJWTToken = await createToken(user.id, 'access', '1d');
             accessToken.set({
                 value: accessJWTToken,
@@ -99,6 +99,7 @@ export const user = new Elysia({ prefix: '/user' })
                 path: '/',
             });
 
+            // TODO i want use httpOnly: false, for development
             const refreshJWTToken = await createToken(user.id, 'refresh', '3d');
             refreshToken.set({
                 value: refreshJWTToken,
