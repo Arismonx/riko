@@ -2,6 +2,8 @@ import type { StaticDecode } from '@sinclair/typebox';
 import { TransformDecodeCheckError, Value } from '@sinclair/typebox/value';
 import { t, type TSchema } from 'elysia';
 
+import packageInfo from '../../package.json';
+
 // A Simple Environment Variable Parser
 
 function parseEnv<T extends TSchema>(
@@ -27,8 +29,12 @@ function parseEnv<T extends TSchema>(
 
 const envSchema = t.Object({
     // Application
-    PROJECT_NAME: t.String({
-        description: 'Project name',
+    APP_NAME: t.String({
+        description: 'App name',
+    }),
+    APP_VERSION: t.String({
+        description: 'App version',
+        default: packageInfo.version || '0.0.1',
     }),
     NODE_ENV: t.Union(
         [t.Literal('development'), t.Literal('test'), t.Literal('production')],
@@ -41,6 +47,25 @@ const envSchema = t.Object({
         default: 'localhost',
         description: 'API hostname',
     }),
+    FRONTEND_HOST: t.String({
+        description: 'Frontend host',
+        default: 'http://localhost:3000',
+    }),
+    BACKEND_CORS_ORIGINS: t
+        .Transform(
+            t.String({
+                description:
+                    'Comma-separated list of origins for the CORS policy',
+                default: '', // Default value is set to an empty string as setting a default for Transform is currently unclear.
+            }),
+        )
+        .Decode((value) =>
+            value
+                .split(',')
+                .map((v) => v.trim().replace(/\/$/, ''))
+                .filter((v) => v),
+        )
+        .Encode((value) => value.join(',')),
 
     // Security
     SECRET_KEY: t.String({
@@ -51,9 +76,6 @@ const envSchema = t.Object({
         pattern: '^\\d+[smhdwMy]$',
         description: 'Access token expiration time',
     }),
-
-    // Ai
-    SYSTEM_PROMPT: t.String({}),
 });
 
 export type Environment = typeof envSchema.static;
