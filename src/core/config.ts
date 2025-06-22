@@ -24,13 +24,8 @@ const envSchema = z
             .string()
             .default('')
             .describe('Comma-separated list of origins for the CORS policy')
-            // transform: split and trim the origins, removing trailing slashes
-            .transform((value) =>
-                value
-                    .split(',')
-                    .map((v) => v.trim().replace(/\/$/, ''))
-                    .filter((v) => v),
-            ),
+            // transform: split and trim the origins
+            .transform((value) => value.split(',').filter((v) => v)),
         // Security
         SECRET_KEY: z.string().describe('Secret key for JWT'),
         ACCESS_TOKEN_EXPIRE: z
@@ -45,7 +40,7 @@ const envSchema = z
         // Database
         DATABASE_URL: z.string().describe('Database connection string'),
 
-        // Ai
+        // AI Agent
         // AI_DEFAULT_INSTRUCTIONS: z.string().describe('Instructions for AI Agent'),
     })
     .transform((values) => ({
