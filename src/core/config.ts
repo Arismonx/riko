@@ -14,10 +14,7 @@ const envSchema = z
 
         // Application
         APP_NAME: z.string().describe('App name'),
-        APP_VERSION: z
-            .string()
-            .describe('App version')
-            .default(packageInfo.version || '0.0.1'),
+        APP_VERSION: z.string().describe('App version'),
         HOSTNAME: z.string().default('localhost').describe('API hostname'),
         FRONTEND_HOST: z
             .string()
@@ -52,7 +49,11 @@ const envSchema = z
     })
     .readonly();
 
-const envServer = envSchema.safeParse(process.env);
+const envServer = envSchema.safeParse({
+    APP_NAME: 'name' in packageInfo ? packageInfo.name : undefined,
+    APP_VERSION: 'version' in packageInfo ? packageInfo.version : undefined,
+    ...process.env,
+});
 
 if (!envServer.success) {
     console.error('Invalid environment variables, check the errors below!');
