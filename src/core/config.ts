@@ -48,6 +48,17 @@ const envSchema = z
         // Ai
         // AI_DEFAULT_INSTRUCTIONS: z.string().describe('Instructions for AI Agent'),
     })
+    .transform((values) => ({
+        ...values,
+        get ALL_CORS_ORIGINS() {
+            return [
+                ...values.BACKEND_CORS_ORIGINS.map((origin) =>
+                    origin.replace(/\/+$/, ''),
+                ),
+                values.FRONTEND_HOST,
+            ];
+        },
+    }))
     .readonly();
 
 const envServer = envSchema.safeParse({

@@ -3,13 +3,13 @@ import { swagger } from '@elysiajs/swagger';
 import { Elysia } from 'elysia';
 
 import { apiRouter } from '@/api';
-import { auth } from '@/modules/auth';
 import { env } from '@/core/config';
+import { auth } from '@/modules/auth';
 
 export const app = new Elysia({ name: env.APP_NAME }) //
     .use(
         cors({
-            origin: [...env.BACKEND_CORS_ORIGINS, env.FRONTEND_HOST],
+            origin: env.ALL_CORS_ORIGINS,
             methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
             credentials: true,
             allowedHeaders: ['Content-Type', 'Authorization'],
