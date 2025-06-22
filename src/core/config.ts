@@ -24,6 +24,7 @@ const envSchema = z
             .string()
             .default('')
             .describe('Comma-separated list of origins for the CORS policy')
+            // transform: split and trim the origins, removing trailing slashes
             .transform((value) =>
                 value
                     .split(',')
