@@ -1,90 +1,65 @@
-import type { StaticDecode } from '@sinclair/typebox';
-import { TransformDecodeCheckError, Value } from '@sinclair/typebox/value';
-import { t, type TSchema } from 'elysia';
+import z from 'zod/v4';
 
 import packageInfo from '../../package.json';
 
-// A Simple Environment Variable Parser
+const envSchema = z
+    .object({
+        NODE_ENV: z
+            .enum(['development', 'test', 'production'], {
+                message:
+                    'NODE_ENV must be one of "development", "test", "production"',
+            })
+            .default('development')
+            .describe('Node environment'),
 
-function parseEnv<T extends TSchema>(
-    schema: T,
-    env: Record<string, string | undefined> = process.env,
-): StaticDecode<T> {
-    const value = Value.Clone(env);
-    const cleaned = Value.Clean(schema, value);
-    const defaulted = Value.Default(schema, cleaned);
-    const converted = Value.Convert(schema, defaulted);
-    try {
-        return Value.Decode(schema, converted);
-    } catch (err) {
-        console.error('Invalid environment variables, check the errors below!');
-        if (err instanceof TransformDecodeCheckError) {
-            console.log([...Value.Errors(schema, converted)]);
-        }
-        throw err;
-    }
+        // Application
+        APP_NAME: z.string().describe('App name'),
+        APP_VERSION: z
+            .string()
+            .describe('App version')
+            .default(packageInfo.version || '0.0.1'),
+        HOSTNAME: z.string().default('localhost').describe('API hostname'),
+        FRONTEND_HOST: z
+            .string()
+            .default('http://localhost:3000')
+            .describe('Frontend host'),
+        BACKEND_CORS_ORIGINS: z
+            .string()
+            .default('')
+            .describe('Comma-separated list of origins for the CORS policy')
+            .transform((value) =>
+                value
+                    .split(',')
+                    .map((v) => v.trim().replace(/\/$/, ''))
+                    .filter((v) => v),
+            ),
+        // Security
+        SECRET_KEY: z.string().describe('Secret key for JWT'),
+        ACCESS_TOKEN_EXPIRE: z
+            .string()
+            .regex(/^\d+[smhdwMy]$/, {
+                message:
+                    'ACCESS_TOKEN_EXPIRE must be in the format of a number followed by a time unit (s, m, h, d, w, M, y)',
+            })
+            .default('15m')
+            .describe('Access token expiration time'),
+
+        // Database
+        DATABASE_URL: z.string().describe('Database connection string'),
+
+        // Ai
+        // AI_DEFAULT_INSTRUCTIONS: z.string().describe('Instructions for AI Agent'),
+    })
+    .readonly();
+
+const envServer = envSchema.safeParse(process.env);
+
+if (!envServer.success) {
+    console.error('Invalid environment variables, check the errors below!');
+    console.error(envServer.error.issues);
+    process.exit(1);
 }
 
-//
+export type Environment = z.infer<typeof envSchema>;
 
-const envSchema = t.Object({
-    // Application
-    APP_NAME: t.String({
-        description: 'App name',
-    }),
-    APP_VERSION: t.String({
-        description: 'App version',
-        default: packageInfo.version || '0.0.1',
-    }),
-    NODE_ENV: t.Union(
-        [t.Literal('development'), t.Literal('test'), t.Literal('production')],
-        {
-            default: 'development',
-            description: 'Node environment',
-        },
-    ),
-    HOSTNAME: t.String({
-        default: 'localhost',
-        description: 'API hostname',
-    }),
-    FRONTEND_HOST: t.String({
-        description: 'Frontend host',
-        default: 'http://localhost:3000',
-    }),
-    BACKEND_CORS_ORIGINS: t
-        .Transform(
-            t.String({
-                description:
-                    'Comma-separated list of origins for the CORS policy',
-                default: '', // Default value is set to an empty string as setting a default for Transform is currently unclear.
-            }),
-        )
-        .Decode((value) =>
-            value
-                .split(',')
-                .map((v) => v.trim().replace(/\/$/, ''))
-                .filter((v) => v),
-        )
-        .Encode((value) => value.join(',')),
-
-    // Security
-    SECRET_KEY: t.String({
-        description: 'Secret key for JWT',
-    }),
-    ACCESS_TOKEN_EXPIRE: t.String({
-        default: '1d',
-        pattern: '^\\d+[smhdwMy]$',
-        description: 'Access token expiration time',
-    }),
-
-    // Ai
-    SYSTEM_PROMPT: t.String({}),
-
-    DATABASE_URL: t.String({
-        description: 'Database connection string',
-    }),
-});
-
-export type Environment = typeof envSchema.static;
-
-export const env: Environment = parseEnv(envSchema, process.env);
+export const env: Environment = envServer.data;
