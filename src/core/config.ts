@@ -23,7 +23,13 @@ const envSchema = z
         BACKEND_CORS_ORIGINS: z
             .string()
             .default('')
-            .transform((value) => value.split(',').filter(Boolean))
+            .transform((value) =>
+                // split by comma, trim each value, and filter out empty strings
+                value
+                    .split(',')
+                    .map((v) => v.trim())
+                    .filter(Boolean),
+            )
             .describe('Comma-separated list of origins for the CORS policy'),
         // Security
         SECRET_KEY: z.string().describe('Secret key for JWT'),
