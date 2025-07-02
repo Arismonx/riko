@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="225" height="225" src="./assets/rika.jpg"  alt="Rika ai-chatbot logo">>
+  <img width="225" height="225" src="./assets/rika.jpg"  alt="Rika ai-chatbot logo">
 </p>
 <h2 align="center">Rika</h2>
 <h4 align="center">An AI chatbot built with Elysia and OpenAI Agents.</h4>
