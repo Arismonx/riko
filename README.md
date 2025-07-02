@@ -1,15 +1,45 @@
-# Elysia with Bun runtime
+<p align="center">
+  <img width="225" height="225" src="https://cdn.discordapp.com/attachments/1347182066860691467/1386735639944495228/IMG_9329.jpg?ex=685b7274&is=685a20f4&hm=78a811326fa7b853b9303335a62ab37decc60c3d6a3fbfad7a669aa455c7a9dd&"  alt="Rika ai-chatbot logo">>
+</p>
+<h2 align="center">Rika</h2>
+<h4 align="center">An AI chatbot built with Elysia and OpenAI Agents.</h4>
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
+## Introduction
+
+Rika is an AI chatbot that utilizes the Elysia framework and OpenAI Agents to provide a conversational experience. It is designed to be easy to set up and extend.
+
+## Technologies Stack
+
+- [Elysia](https://elysiajs.com) - Ergonomic Framework for Humans
+- [Prisma](https://www.prisma.io) - Next-generation ORM for Node.js & TypeScript
+- [Bun](https://bun.sh) - A fast all-in-one JavaScript runtime
+- [Biome](https://biomejs.dev) - A fast formatter and linter
+
+## Features
+
+- Secure password hashing by default.
+- JWT token authentication.
+- CI (continuous integration)
+
+<!-- TODO: features -->
+
+- [bun](https://bun.sh) 1.2.17 or higher
+
+## Installation
+
 ```bash
-bun create elysia ./elysia-example
+bun install
 ```
 
-## Development
-To start the development server run:
-```bash
-bun run dev
+## Configuration
+
+1. Copy the `.env.example` file to `.env` and fill in the required values.
+
+```
+cp .env.example .env
 ```
 
-Open http://localhost:3000/ with your browser to see the result.
+<!--
+## License
+
+This project is licensed under the GNUv3 License - see the [LICENSE](LICENSE) file for details.-->
