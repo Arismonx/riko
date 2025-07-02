@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="225" height="225" src="https://cdn.discordapp.com/attachments/1347182066860691467/1386735639944495228/IMG_9329.jpg?ex=685b7274&is=685a20f4&hm=78a811326fa7b853b9303335a62ab37decc60c3d6a3fbfad7a669aa455c7a9dd&"  alt="Rika ai-chatbot logo">>
+  <img width="225" height="225" src="./assets/rika.jpg"  alt="Rika ai-chatbot logo">>
 </p>
 <h2 align="center">Rika</h2>
 <h4 align="center">An AI chatbot built with Elysia and OpenAI Agents.</h4>
@@ -22,6 +22,8 @@ Rika is an AI chatbot that utilizes the Elysia framework and OpenAI Agents to pr
 - CI (continuous integration)
 
 <!-- TODO: features -->
+
+## Requirements
 
 - [bun](https://bun.sh) 1.2.17 or higher
 
