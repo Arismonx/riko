@@ -23,6 +23,8 @@ Rika is an AI chatbot that utilizes the Elysia framework and OpenAI Agents to pr
 
 <!-- TODO: features -->
 
+## Requirements
+
 - [bun](https://bun.sh) 1.2.17 or higher
 
 ## Installation
