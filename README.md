@@ -1,12 +1,12 @@
 <p align="center">
-  <img width="225" height="225" src="./assets/rika.jpg"  alt="Rika ai-chatbot logo">
+  <img width="225" height="225" src="./assets/rika.jpg"  alt="Riko ai-chatbot logo">
 </p>
-<h2 align="center">Rika</h2>
+<h2 align="center">Riko</h2>
 <h4 align="center">An AI chatbot built with Elysia and OpenAI Agents.</h4>
 
 ## Introduction
 
-Rika is an AI chatbot that utilizes the Elysia framework and OpenAI Agents to provide a conversational experience. It is designed to be easy to set up and extend.
+Riko is an AI chatbot that utilizes the Elysia framework and OpenAI Agents to provide a conversational experience. It is designed to be easy to set up and extend.
 
 ## Technologies Stack
 
