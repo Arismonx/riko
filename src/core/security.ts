@@ -7,39 +7,39 @@ import { env } from '@/core/config';
 const ALGORITHM = 'HS256';
 
 export const security = jwt({
-    name: 'jwt',
-    secret: env.SECRET_KEY,
-    alg: ALGORITHM,
-    typ: 'JWT',
-    exp: '7d',
-    schema: t.Object({
-        sub: t.String(),
-    }),
+  name: 'jwt',
+  secret: env.SECRET_KEY,
+  alg: ALGORITHM,
+  typ: 'JWT',
+  exp: '7d',
+  schema: t.Object({
+    sub: t.String(),
+  }),
 });
 
 export async function verifyPassword(
-    plainPassword: string,
-    hashedPassword: string,
+  plainPassword: string,
+  hashedPassword: string,
 ) {
-    return await Bun.password.verify(plainPassword, hashedPassword, 'bcrypt');
+  return await Bun.password.verify(plainPassword, hashedPassword, 'bcrypt');
 }
 
 export async function getPasswordHash(password: string) {
-    return await Bun.password.hash(password, {
-        algorithm: 'bcrypt',
-        cost: 10,
-    });
+  return await Bun.password.hash(password, {
+    algorithm: 'bcrypt',
+    cost: 10,
+  });
 }
 
 export const createToken = async (
-    subject: string,
-    type: string,
-    exp: string,
+  subject: string,
+  type: string,
+  exp: string,
 ) => {
-    const payload = { sub: subject, type };
-    const encodedJwt = await new jose.SignJWT(payload)
-        .setProtectedHeader({ alg: ALGORITHM, typ: 'JWT' })
-        .setExpirationTime(exp)
-        .sign(new TextEncoder().encode(env.SECRET_KEY));
-    return encodedJwt;
+  const payload = { sub: subject, type };
+  const encodedJwt = await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: ALGORITHM, typ: 'JWT' })
+    .setExpirationTime(exp)
+    .sign(new TextEncoder().encode(env.SECRET_KEY));
+  return encodedJwt;
 };
